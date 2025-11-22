@@ -21,4 +21,7 @@ void IaSetWrkFadeParam(u_char channel, int fade_flm, u_short target_vol);
 void IaSetWrkFadeMode(u_char channel, u_char mode, u_short target_vol, int fade_flm);
 void DbgDispAdpcmCmdWrk(ADPCM_CMD* acp);
 
+void IAdpcmReadCh0();
+void IAdpcmReadCh1();
+
 #endif // IOPADPCM_H_

@@ -1,8 +1,10 @@
 #include "common.h"
 
+#include "adpcm/iopadpcm.h"
 #include "libsd.h"
 #include "se/iopse.h"
 
+#include "intrman.h"
 #include "libcdvd.h"
 #include "memory.h"
 #include "sif.h"
@@ -23,6 +25,13 @@ static void ICdvdTransSeInit();
 static void ICdvdSetRetStat(int id, u_char stat);
 static int ICdvdExecCmdSub(CDVD_REQ_BUF* req_bufp);
 static int ICdvdCheckBufStatus();
+static int ICdvdSeTransCB(int channel, void* data);
+static void ICdvdTransCheck();
+static void ICdvdAdpcmLoad();
+static void ICdvdExecCmd();
+static void ICdvdDataReadOnceSector();
+static int ICdvdCheckLoadError();
+static void ICdvdTransFinishedData();
 
 void ICdvdCmd(IOP_COMMAND* icp)
 {
@@ -55,61 +64,421 @@ void ICdvdInit(int reset)
         ICdvdInitOnce();
 }
 
-INCLUDE_ASM("asm/nonmatchings/cdvd/iopcdvd", ICdvdInitOnce);
-// static void ICdvdInitOnce()
-//{
-//     int tmp;
-//     char ld_error = 0;
-//     u_int ld_cnt = 0;
-//     sceCdlFILE cdlf;
-//     sceSifDmaData sdd;
-//     u_int dma_id;
-//     int oldstat;
-//     int i;
-//     u_int ret_count0;
-//     u_int ret_count1;
-//     char fname[80];
-//
-//     memset(&cdvd_stat, 0, sizeof(cdvd_stat));
-//     memset(cdvd_req, 0, sizeof(cdvd_req));
-//     memset(&iop_stat.cdvd, 0, sizeof(iop_stat.cdvd));
-//     memset(cdvd_trans, 0, sizeof(cdvd_trans));
-//
-//     load_buf_table[0] = AllocSysMemory(0, 0x64000, 0);
-//     if (!load_buf_table[0]) {
-//     } else {
-//         load_buf_table[1] = (u_int)load_buf_table[0] + 0x32000;
-//         iop_stat.cdvd.ld_addr = (u_int)load_buf_table[0];
-//     }
-//
-//     if (sceCdSync(1)) {
-//         while (!sceCdBreak())
-//             ;
-//     }
-//
-//     strcpy(fname, "\\IMG_HD.BIN;1");
-//     if (!sceCdSearchFile(&cdlf, fname)) {
-//         while (1)
-//             ;
-//     }
-//     strcpy(fname, "\\IMG_BD.BIN;1");
-//     if (!sceCdSearchFile(&cdvd_stat.cdlf, fname)) {
-//         while (1)
-//             ;
-//     }
-//
-//     cdvd_stat.rmode.trycount = 0;
-//     cdvd_stat.rmode.spindlctrl = 1;
-//     cdvd_stat.rmode.datapattern = 0;
-// }
+static void ICdvdInitOnce()
+{
+    int tmp;
+    char ld_error = 0;
+    u_int ld_cnt = 0;
+    sceCdlFILE cdlf;
+    sceSifDmaData sdd;
+    u_int dma_id;
+    int oldstat;
+    int i;
+    u_int ret_count0;
+    u_int ret_count1;
+    char fname[80];
 
-INCLUDE_ASM("asm/nonmatchings/cdvd/iopcdvd", ICdvdInitSoftReset);
+    memset(&cdvd_stat, 0, sizeof(cdvd_stat));
+    memset(cdvd_req, 0, sizeof(cdvd_req));
+    memset(&iop_stat.cdvd, 0, sizeof(iop_stat.cdvd));
+    memset(cdvd_trans, 0, sizeof(cdvd_trans));
 
-INCLUDE_ASM("asm/nonmatchings/cdvd/iopcdvd", ICdvdMain);
+    load_buf_table[0] = AllocSysMemory(0, 0x64000, 0);
+    if (!load_buf_table[0]) {
+    } else {
+        load_buf_table[1] = (u_int)load_buf_table[0] + 0x32000;
+        iop_stat.cdvd.ld_addr = (u_int)load_buf_table[0];
+    }
 
-INCLUDE_ASM("asm/nonmatchings/cdvd/iopcdvd", ICdvdTransCheck);
+    if (sceCdSync(1)) {
+        while (!sceCdBreak())
+            ;
+    }
 
-INCLUDE_ASM("asm/nonmatchings/cdvd/iopcdvd", ICdvdTransFinishedData);
+    strcpy(fname, "\\IMG_HD.BIN;1");
+    if (!sceCdSearchFile(&cdlf, fname)) {
+        while (1)
+            ;
+    }
+    strcpy(fname, "\\IMG_BD.BIN;1");
+    if (!sceCdSearchFile(&cdvd_stat.cdlf, fname)) {
+        while (1)
+            ;
+    }
+
+    cdvd_stat.rmode.trycount = 0;
+    cdvd_stat.rmode.spindlctrl = 1;
+    cdvd_stat.rmode.datapattern = 0;
+
+    while (1) {
+        ld_error = 0;
+        if (sceCdDiskReady(1) == 2) {
+            if (!sceCdRead(cdlf.lsn, (cdlf.size + 2047) >> 11, load_buf_table[0], &cdvd_stat.rmode)) {
+                ret_count0 = 0;
+                while (sceCdSync(1)) {
+                    ret_count0++;
+                    if (ret_count0 > 0xF00000) {
+                        while (!sceCdBreak())
+                            ;
+                        break;
+                    }
+                }
+                ld_error = 1;
+            } else {
+                ret_count0 = 0;
+                while (sceCdSync(1)) {
+                    ret_count0++;
+                    for (ret_count1 = 0; ret_count1 <= 0x7FFFFF; ++ret_count1)
+                        ;
+
+                    if (ret_count0 >= 0x33) {
+                        while (!sceCdBreak())
+                            ;
+                        ld_error = 1;
+                        break;
+                    }
+                }
+
+                if (!ld_error) {
+                    if (!sceCdGetError())
+                        ld_error = 0;
+                    else
+                        ld_error = 1;
+                }
+            }
+        } else {
+            ld_error = 1;
+        }
+
+        if (ld_error) {
+            for (i = 0; i <= 0x7FFFF; ++i)
+                ;
+
+            ld_error = 0;
+        } else {
+            break;
+        }
+    }
+
+    sdd.data = (u_int)load_buf_table[0];
+    sdd.addr = 0x12f0000;
+    sdd.size = cdlf.size;
+    sdd.mode = 0;
+    CpuSuspendIntr(&oldstat);
+    dma_id = sceSifSetDma(&sdd, 1);
+    CpuResumeIntr(oldstat);
+    while (sceSifDmaStat(dma_id) >= 0)
+        ;
+    tmp = QueryMemSize();
+    tmp = QueryTotalFreeMemSize();
+    tmp = QueryMaxFreeMemSize();
+}
+
+static void ICdvdInitSoftReset()
+{
+    memset(&cdvd_stat, 0, sizeof(cdvd_stat));
+    memset(cdvd_req, 0, sizeof(cdvd_req));
+    memset(&iop_stat.cdvd, 0, sizeof(iop_stat.cdvd));
+
+    if (sceCdSync(1)) {
+        while (!sceCdBreak())
+            ;
+    }
+}
+void ICdvdMain()
+{
+
+    ICdvdTransCheck();
+
+    if (sceCdDiskReady(1) != 2) {
+
+        return;
+    }
+    if (cdvd_stat.error_cnt) {
+
+        cdvd_stat.error_cnt--;
+        if (!cdvd_stat.error_cnt)
+
+            sceCdRead(
+                cdvd_stat.end_size / 2048 + cdvd_stat.start,
+                (cdvd_stat.now_size + 2047) / 2048,
+                load_buf_table[cdvd_stat.now_lbuf],
+                &cdvd_stat.rmode);
+        return;
+    }
+    if (cdvd_stat.stat == CDVD_STAT_FREE) {
+
+        if (cdvd_stat.adpcm_req) {
+
+            ICdvdAdpcmLoad();
+            cdvd_stat.stat = 2;
+        } else {
+
+            if (cdvd_stat.cmd_on) {
+                ICdvdDataReadOnceSector();
+                cdvd_stat.stat = 1;
+            } else {
+
+                ICdvdExecCmd();
+            }
+        }
+        return;
+    }
+
+    if (cdvd_stat.stat == CDVD_STAT_LOADING) {
+        if (!sceCdSync(1)) {
+            int error_stat;
+
+            cdvd_stat.ctime = 0;
+
+            error_stat = ICdvdCheckLoadError();
+
+            if (error_stat == 1) {
+                cdvd_stat.error_cnt = 10;
+
+                return;
+            } else {
+
+                if (error_stat == -1) {
+
+                    return;
+                }
+            }
+
+            ICdvdTransFinishedData();
+
+            cdvd_stat.end_size += cdvd_stat.now_size;
+
+            if (cdvd_stat.size <= cdvd_stat.end_size) {
+
+                cdvd_stat.stat = 0;
+                cdvd_stat.start_pos = (cdvd_stat.start_pos + 1) % 32;
+                cdvd_stat.buf_use_num--;
+                cdvd_stat.cmd_on = 0;
+            }
+
+            if (cdvd_stat.adpcm_req) {
+
+                ICdvdAdpcmLoad();
+                cdvd_stat.stat = 2;
+            } else {
+                if (cdvd_stat.cmd_on) {
+
+                    if (!ICdvdCheckBufStatus()) {
+                        cdvd_stat.stat = 3;
+                        return;
+                    }
+
+                    ICdvdDataReadOnceSector();
+                }
+            }
+        } else {
+            if (cdvd_stat.ctime >= 0x960) {
+            retry:
+                if (sceCdBreak()) {
+                } else {
+                    cdvd_stat.ctime = 0;
+                    cdvd_stat.error_cnt = 10;
+                    return;
+                    goto retry;
+                }
+            } else {
+                cdvd_stat.ctime++;
+            }
+        }
+        return;
+    }
+
+    if (cdvd_stat.stat == CDVD_STAT_STREAMING) {
+        if (!sceCdSync(1)) {
+
+            int pos = 0xff;
+
+            int error_stat = ICdvdCheckLoadError();
+            if (error_stat == 1) {
+                cdvd_stat.error_cnt = 10;
+
+                return;
+            } else {
+
+                if (error_stat == -1) {
+
+                    return;
+                }
+            }
+
+            if (cdvd_stat.adpcm[0].now_load != 0) {
+                pos = 0;
+            } else {
+                if (cdvd_stat.adpcm[1].now_load != 0) {
+                    pos = 1;
+                } else {
+                    return;
+                }
+            }
+
+            if (cdvd_stat.adpcm[pos].req_type == 1) {
+                IAdpcmLoadEndPreOnly(0);
+            } else {
+                SetLoopFlgSize(cdvd_stat.adpcm[pos].size_now, (u_int*)cdvd_stat.adpcm[pos].taddr, 0);
+                IAdpcmLoadEndStream(0);
+            }
+
+            cdvd_stat.adpcm[pos].now_load = 0;
+            cdvd_stat.adpcm[pos].req_type = 0;
+            cdvd_stat.adpcm[pos].req_type = 0;
+            if (!cdvd_stat.adpcm[pos ^ 1].req_type) {
+                cdvd_stat.adpcm_req = 0;
+            } else {
+            }
+
+            cdvd_stat.stat = 0;
+        } else {
+            if (cdvd_stat.ctime >= 0x960) {
+                if (sceCdBreak()) {
+                    cdvd_stat.ctime = 0;
+                }
+            } else {
+                cdvd_stat.ctime++;
+            }
+        }
+
+        return;
+    }
+
+    if (cdvd_stat.stat == CDVD_STAT_TRANS_WAIT) {
+        if (!ICdvdCheckBufStatus())
+            return;
+
+        if (cdvd_stat.size <= cdvd_stat.end_size) {
+            cdvd_stat.start_pos = (cdvd_stat.start_pos + 1) % 32;
+            --cdvd_stat.buf_use_num;
+            cdvd_stat.cmd_on = 0;
+            cdvd_stat.stat = 0;
+        } else {
+            ICdvdDataReadOnceSector();
+            cdvd_stat.stat = 1;
+        }
+
+        return;
+    }
+
+    if (cdvd_stat.stat == CDVD_STAT_SEEKING) {
+        if (!sceCdSync(1)) {
+            cdvd_stat.stat = 0;
+        } else {
+            if (cdvd_stat.ctime >= 0x960) {
+                if (sceCdBreak()) {
+                }
+            } else {
+                cdvd_stat.ctime++;
+            }
+        }
+
+        return;
+    }
+}
+
+static void ICdvdTransCheck()
+{
+    int i;
+
+    for (i = 0; i < 2; ++i) {
+        if (cdvd_trans[i].stat == CDVD_STAT_STREAMING) {
+
+            switch (cdvd_trans[i].tmem) {
+            case TRANS_MEM_EE:
+                if (sceSifDmaStat(cdvd_trans[i].tid) < 0) {
+                    if (cdvd_trans[i].ltrans) {
+                        cdvd_trans[i].stat = CDVD_STAT_FREE;
+                        ICdvdSetRetStat(cdvd_trans[i].id, CDVD_LS_FINISHED);
+                    } else {
+                        cdvd_trans[i].stat = CDVD_STAT_TRANS_WAIT;
+                    }
+                }
+                break;
+
+            case TRANS_MEM_IOP:
+                if (cdvd_trans[i].ltrans) {
+                    cdvd_trans[i].stat = CDVD_STAT_FREE;
+                    ICdvdSetRetStat(cdvd_trans[i].id, CDVD_LS_FINISHED);
+                } else {
+                    cdvd_trans[i].stat = CDVD_STAT_TRANS_WAIT;
+                }
+                break;
+
+            case TRANS_MEM_SPU:
+                if (sceSdVoiceTransStatus(cdvd_trans[i].tid, 0)) {
+                    if (cdvd_trans[i].ltrans) {
+                        cdvd_trans[i].stat = CDVD_STAT_FREE;
+                        ICdvdSetRetStat(cdvd_trans[i].id, CDVD_LS_FINISHED);
+                    } else {
+                        cdvd_trans[i].stat = CDVD_STAT_TRANS_WAIT;
+                    }
+                }
+                break;
+            }
+        }
+    }
+}
+
+static void ICdvdTransFinishedData()
+{
+    sceSifDmaData sdd;
+    int oldstat;
+    u_int trans_size;
+
+    switch (cdvd_req[cdvd_stat.start_pos].tmem) {
+    case TRANS_MEM_EE:
+        sdd.addr = (u_int)cdvd_req[cdvd_stat.start_pos].taddr + cdvd_stat.end_size;
+        sdd.data = (u_int)load_buf_table[cdvd_stat.now_lbuf];
+        sdd.size = cdvd_stat.now_size;
+        sdd.mode = 0;
+        cdvd_trans[cdvd_stat.now_lbuf].stat = 2;
+        cdvd_trans[cdvd_stat.now_lbuf].id = cdvd_req[cdvd_stat.start_pos].id;
+        CpuSuspendIntr(&oldstat);
+        cdvd_trans[cdvd_stat.now_lbuf].tid = sceSifSetDma(&sdd, 1);
+        CpuResumeIntr(oldstat);
+        cdvd_trans[cdvd_stat.now_lbuf].tmem = cdvd_req[cdvd_stat.start_pos].tmem;
+        break;
+
+    case TRANS_MEM_IOP:
+        memcpy(
+            load_buf_table[cdvd_stat.now_lbuf],
+            (char*)cdvd_req[cdvd_stat.start_pos].taddr + cdvd_stat.end_size,
+            cdvd_stat.now_size);
+        cdvd_trans[cdvd_stat.now_lbuf].stat = 2;
+        cdvd_trans[cdvd_stat.now_lbuf].id = cdvd_req[cdvd_stat.start_pos].id;
+        cdvd_trans[cdvd_stat.now_lbuf].tmem = cdvd_req[cdvd_stat.start_pos].tmem;
+        break;
+
+    case TRANS_MEM_SPU:
+        cdvd_trans[cdvd_stat.now_lbuf].tid = 1;
+
+        if (cdvd_stat.now_size % 64)
+            trans_size = (cdvd_stat.now_size + 64) - (cdvd_stat.now_size % 64);
+        else
+            trans_size = cdvd_stat.now_size;
+
+        if (!sceSdVoiceTransStatus(cdvd_trans[cdvd_stat.now_lbuf].tid, 0))
+            sceSdVoiceTransStatus(cdvd_trans[cdvd_stat.now_lbuf].tid, 1);
+
+        while (sceSdVoiceTrans(
+                   cdvd_trans[cdvd_stat.now_lbuf].tid,
+                   0,
+                   load_buf_table[cdvd_stat.now_lbuf],
+                   ((u_int)cdvd_req[cdvd_stat.start_pos].taddr + cdvd_stat.end_size),
+                   trans_size)
+            < 0)
+            ;
+        sceSdSetTransIntrHandler(cdvd_trans[cdvd_stat.now_lbuf].tid, ICdvdSeTransCB, 0);
+        cdvd_trans[cdvd_stat.now_lbuf].stat = 2;
+        cdvd_trans[cdvd_stat.now_lbuf].id = cdvd_req[cdvd_stat.start_pos].id;
+        cdvd_stat.vtrans_flg = 0;
+        cdvd_trans[cdvd_stat.now_lbuf].tmem = cdvd_req[cdvd_stat.start_pos].tmem;
+        break;
+    }
+}
 
 static int ICdvdSeTransCB(int channel, void* data)
 {
@@ -136,7 +505,14 @@ static void ICdvdDataReadOnceSector()
         &cdvd_stat.rmode);
 }
 
-INCLUDE_ASM("asm/nonmatchings/cdvd/iopcdvd", ICdvdOnPreLoadEnd);
+u_char ICdvdOnPreLoadEnd()
+{
+    if (cdvd_stat.pcm_pre_end) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 static void ICdvdAdpcmLoad()
 {

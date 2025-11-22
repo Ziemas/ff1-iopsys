@@ -53,7 +53,11 @@
       "name": "src/adpcm/ia_cmd",
       "target_path": "expected/build/src/adpcm/ia_cmd.c.o",
       "base_path": "build/src/adpcm/ia_cmd.c.o",
-      "metadata": {}
+      "metadata": {},
+      "symbol_mappings": {
+        "IAdpcmCmdStop": "IAdpcmCmdtop",
+        "jtbl_0000B300": "[.rodata-0]"
+      }
     },
     {
       "name": "src/cdvd/iopcdvd",

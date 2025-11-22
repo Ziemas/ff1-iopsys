@@ -1,0 +1,77 @@
+{
+  "custom_make": "make",
+  "custom_args": [],
+  "build_base": true,
+  "build_target": false,
+  "watch_patterns": [
+    "*.c",
+    "*.cc",
+    "*.cp",
+    "*.cpp",
+    "*.cxx",
+    "*.c++",
+    "*.h",
+    "*.hh",
+    "*.hp",
+    "*.hpp",
+    "*.hxx",
+    "*.h++",
+    "*.pch",
+    "*.pch++",
+    "*.inc",
+    "*.s",
+    "*.S",
+    "*.asm",
+    "*.py",
+    "*.yml",
+    "*.txt",
+    "*.json"
+  ],
+  "ignore_patterns": [
+    "build/**/*"
+  ],
+  "units": [
+    {
+      "name": "src/iopmain",
+      "target_path": "expected/build/src/iopmain.c.o",
+      "base_path": "build/src/iopmain.c.o",
+      "metadata": {}
+    },
+    {
+      "name": "src/adpcm/iopadpcm",
+      "target_path": "expected/build/src/adpcm/iopadpcm.c.o",
+      "base_path": "build/src/adpcm/iopadpcm.c.o",
+      "metadata": {}
+    },
+    {
+      "name": "src/adpcm/ia_func",
+      "target_path": "expected/build/src/adpcm/ia_func.c.o",
+      "base_path": "build/src/adpcm/ia_func.c.o",
+      "metadata": {}
+    },
+    {
+      "name": "src/adpcm/ia_cmd",
+      "target_path": "expected/build/src/adpcm/ia_cmd.c.o",
+      "base_path": "build/src/adpcm/ia_cmd.c.o",
+      "metadata": {}
+    },
+    {
+      "name": "src/cdvd/iopcdvd",
+      "target_path": "expected/build/src/cdvd/iopcdvd.c.o",
+      "base_path": "build/src/cdvd/iopcdvd.c.o",
+      "metadata": {}
+    },
+    {
+      "name": "src/se/iopse",
+      "target_path": "expected/build/src/se/iopse.c.o",
+      "base_path": "build/src/se/iopse.c.o",
+      "metadata": {}
+    },
+    {
+      "name": "src/se/sedat",
+      "target_path": "expected/build/src/se/sedat.c.o",
+      "base_path": "build/src/se/sedat.c.o",
+      "metadata": {}
+    }
+  ]
+}

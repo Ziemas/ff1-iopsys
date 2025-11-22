@@ -1,0 +1,68 @@
+name: overlord
+sha1: acff8613eb4e8e23035686d8675bbd739a34fb1a
+options:
+    # paths
+    basename: IOPSYS.IRX
+    target_path: in/IOPSYS.IRX
+    base_path: ..
+    
+    asm_path: asm
+    src_path: src
+    build_path: build
+    subalign: 4
+
+    extensions_path: tools/splat_ext 
+    symbol_addrs_path: config/symbol_addrs.txt
+    undefined_funcs_auto_path: config/undefined_funcs_auto.txt
+    undefined_syms_auto_path:  config/undefined_syms_auto.txt
+
+    migrate_rodata_to_functions: True
+    named_regs_for_c_funcs: False
+
+    # compiler 
+    compiler: GCC
+    platform: psx
+
+    string_encoding: ASCII
+    
+    section_order: [".iopmod", ".text", ".rel.text", ".rodata", ".rel.rodata", ".data", ".sbss", ".bss"]
+
+segments:
+    - [0, databin, elf_header]
+    - [0x74, databin, iopmod]
+    - name: text
+      type: code
+      start: 0x90
+      vram: 0x0
+      bss_size: 0x7df8c
+      subsegments:
+        # .text
+        - [0x90, c, iopmain]
+        - [0x870, c, se/iopse]
+        - [0x3400, c, se/sedat]
+        #- [0x34a0, c, se/seftbl]
+        - [0x34a0, c, adpcm/iopadpcm]
+        #- [0x6ca0, c, adpcm/adpcmdat]
+        - [0x6ca0, c, adpcm/ia_func]
+        - [0x8110, c, adpcm/ia_cmd]
+        - [0x8870, c, cdvd/iopcdvd]
+        - [0xafd0, asm, cca21200_ilb_stub]
+        - [0x00b280, .rodata, se/iopse]
+        - [0x00b330, .rodata, adpcm/iopadpcm]
+        - [0x00b390, .rodata, adpcm/ia_cmd]
+        - [0x00b3c0, .rodata, cdvd/iopcdvd]
+
+        - [0x00b400, .data, iopmain]
+        - [0x00b410, .data, se/iopse]
+        - [0x00b490, .data, se/sedat]
+
+        # .sbss / .bss
+        - { start: 0x00d6f0, type: sbss, vram: 0xd660 }
+        - { start: 0x00d6f0, type: bss, vram: 0xd690 }
+
+    - [0x00d6f0, databin] # .mdebug
+    - [0x058690, databin] # .shstrtab
+    - [0x0588f8, databin] # .rel.text
+    - [0x05d170, databin] # .rel.rodata
+    - [0x05d3d8, databin] # .symtab
+    - [0x05e2d8, databin] # .strtab

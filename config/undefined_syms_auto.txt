@@ -1,0 +1,16 @@
+iop_mv = 0xD660;
+se_stop_flg = 0xD664;
+se_start_flg = 0xD668;
+AdpcmIopBuf = 0xD670;
+AdpcmSpuBuf = 0xD678;
+load_buf_table = 0xD680;
+se_wrk_set = 0xD690;
+iop_stat = 0xD990;
+iop_sys_ctrl = 0xDB10;
+se_start_point = 0xDF30;
+cmd_buf = 0xDF70;
+now_cmd = 0xE070;
+iop_adpcm = 0xE090;
+cdvd_stat = 0xE250;
+cdvd_req = 0xE2F0;
+cdvd_trans = 0xE6F0;

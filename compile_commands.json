@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/iopmain.c.o -c /home/ziemas/Development/iopsys1/src/iopmain.c",
+  "file": "/home/ziemas/Development/iopsys1/src/iopmain.c",
+  "output": "CMakeFiles/test.dir/src/iopmain.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/se/iopse.c.o -c /home/ziemas/Development/iopsys1/src/se/iopse.c",
+  "file": "/home/ziemas/Development/iopsys1/src/se/iopse.c",
+  "output": "CMakeFiles/test.dir/src/se/iopse.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/se/sedat.c.o -c /home/ziemas/Development/iopsys1/src/se/sedat.c",
+  "file": "/home/ziemas/Development/iopsys1/src/se/sedat.c",
+  "output": "CMakeFiles/test.dir/src/se/sedat.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/adpcm/iopadpcm.c.o -c /home/ziemas/Development/iopsys1/src/adpcm/iopadpcm.c",
+  "file": "/home/ziemas/Development/iopsys1/src/adpcm/iopadpcm.c",
+  "output": "CMakeFiles/test.dir/src/adpcm/iopadpcm.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/adpcm/ia_func.c.o -c /home/ziemas/Development/iopsys1/src/adpcm/ia_func.c",
+  "file": "/home/ziemas/Development/iopsys1/src/adpcm/ia_func.c",
+  "output": "CMakeFiles/test.dir/src/adpcm/ia_func.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/adpcm/ia_cmd.c.o -c /home/ziemas/Development/iopsys1/src/adpcm/ia_cmd.c",
+  "file": "/home/ziemas/Development/iopsys1/src/adpcm/ia_cmd.c",
+  "output": "CMakeFiles/test.dir/src/adpcm/ia_cmd.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/iopsys1/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/iopsys1/include -I/home/ziemas/Development/iopsys1/src -m32 -o CMakeFiles/test.dir/src/cdvd/iopcdvd.c.o -c /home/ziemas/Development/iopsys1/src/cdvd/iopcdvd.c",
+  "file": "/home/ziemas/Development/iopsys1/src/cdvd/iopcdvd.c",
+  "output": "CMakeFiles/test.dir/src/cdvd/iopcdvd.c.o"
+}
+]

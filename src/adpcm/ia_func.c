@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "adpcm/iopadpcm.h"
+#include "se/iopse.h"
 
 #include "libsd.h"
 #include "memory.h"
@@ -94,15 +95,47 @@ void IaSetRegSsa(u_char channel)
     sceSdSetAddr(iop_adpcm[channel].core | iop_adpcm[channel].vr | SD_VA_SSA, (u_int)(AdpcmSpuBuf[channel] + 4096));
 }
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetRegAdsr);
+void IaSetRegAdsr(u_char channel)
+{
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vl | SD_VP_ADSR1, 0xFu);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vl | SD_VP_ADSR2, 0x1FC0u);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vr | SD_VP_ADSR1, 0xFu);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vr | SD_VP_ADSR2, 0x1FC0u);
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetRegVol);
+void IaSetRegVol(u_char channel)
+{
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vl | SD_VP_VOLL, iop_adpcm[channel].vol_ll);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vl | SD_VP_VOLR, iop_adpcm[channel].vol_lr);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vr | SD_VP_VOLL, iop_adpcm[channel].vol_rl);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vr | SD_VP_VOLR, iop_adpcm[channel].vol_rr);
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetRegPitch);
+void IaSetRegPitch(u_char channel)
+{
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vl | SD_VP_PITCH, iop_adpcm[channel].pitch);
+    sceSdSetParam(iop_adpcm[channel].core | iop_adpcm[channel].vr | SD_VP_PITCH, iop_adpcm[channel].pitch);
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetRegKon);
+void IaSetRegKon(u_char channel)
+{
+    // What is even going on here? these seems completely wrong
+    if (channel) {
+        sceSdSetSwitch(iop_adpcm[channel].core | SD_S_KON, 0xC00000u);
+    } else {
+        sceSdSetSwitch(iop_adpcm[channel].core | SD_S_KON, 3);
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetRegKoff);
+void IaSetRegKoff(u_char channel)
+{
+    // What is even going on here? these seems completely wrong
+    if (channel) {
+        sceSdSetSwitch(iop_adpcm[channel].core | SD_S_KOFF, 0xC00000u);
+    } else {
+        sceSdSetSwitch(iop_adpcm[channel].core | SD_S_KOFF, 3);
+    }
+}
 
 void IaSetWrkVolPanPitch(u_char channel, u_short pan, u_short master_vol, u_short pitch)
 {
@@ -120,11 +153,27 @@ void IaSetWrkVolPanPitch(u_char channel, u_short pan, u_short master_vol, u_shor
     iop_adpcm[channel].pitch = pitch;
 }
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetWrkFadeParam);
+void IaSetWrkFadeParam(u_char channel, int fade_flm, u_short target_vol)
+{
+    iop_adpcm[channel].fade_flm = fade_flm;
+    iop_adpcm[channel].target_vol = target_vol;
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetWrkFadeMode);
+void IaSetWrkFadeMode(u_char channel, u_char mode, u_short target_vol, int fade_flm)
+{
+    iop_adpcm[channel].count = 0;
+    iop_adpcm[channel].fade_mode = mode;
+    iop_adpcm[channel].fade_flm = fade_flm;
+    iop_adpcm[channel].target_vol = target_vol;
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetWrkFadeInit);
+void IaSetWrkFadeInit(u_char channel)
+{
+    iop_adpcm[channel].count = 0;
+    iop_adpcm[channel].fade_mode = 0;
+    iop_adpcm[channel].fade_flm = 0;
+    iop_adpcm[channel].target_vol = iop_adpcm[channel].vol;
+}
 
 void GetPosCalc(ADPCM_POS_CALC* calcp)
 {
@@ -148,8 +197,28 @@ void GetPosCalc(ADPCM_POS_CALC* calcp)
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetSteMono);
+void IaSetSteMono()
+{
+    IaSetWrkVolPanPitch(0, iop_adpcm[0].pan, iop_adpcm[0].vol, iop_adpcm[0].pitch);
+    IaSetRegVol(0);
+}
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetStopBlock);
+void IaSetStopBlock(u_char channel)
+{
+    u_char sb_tbl[64];
 
-INCLUDE_ASM("asm/nonmatchings/adpcm/ia_func", IaSetMasterVol);
+    memset(sb_tbl, 0, sizeof(sb_tbl));
+    sb_tbl[1] = 7;
+    sb_tbl[17] = 7;
+    sb_tbl[33] = 7;
+    sb_tbl[49] = 7;
+    while (sceSdVoiceTrans(channel, 0, sb_tbl, snd_buf_top[2 * channel + 26], 0x40u) < 0)
+        ;
+    sceSdVoiceTransStatus(channel, 1);
+}
+
+void IaSetMasterVol(u_short mvol)
+{
+    sceSdSetParam(SD_P_MVOLL, mvol & 0x3FFF);
+    sceSdSetParam(SD_P_MVOLR, mvol & 0x3FFF);
+}

@@ -1,0 +1,423 @@
+// File written by stdump development version on 2025-11-19
+// 
+// Input file:
+//   IOPSYS.IRX
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/iopmain.c
+// *****************************************************************************
+
+/* 00000000 000000d8 */ int start(/* 0x38(sp) */ int argc, /* 0x3c(sp) */ char **argv) {
+	/* 0x10(sp) */ ThreadParam param;
+	/* 0x28(sp) */ int tmp;
+}
+
+/* 000000d8 000000c8 */ static int IopMainLoop() {
+	/* 0x20(sp) */ sceSifQueueData qd;
+	/* 0x38(sp) */ sceSifServeData sd;
+}
+
+/* 000001a0 000002a4 */ static void* IopDrvFunc(/* 0x20(sp) */ unsigned int command, /* 0x24(sp) */ void *data, /* 0x28(sp) */ int size) {
+	/* 0x10(sp) */ IOP_COMMAND *icp;
+	/* 0x14(sp) */ int i;
+}
+
+/* 00000444 00000058 */ static void IopInitDevice() {}
+
+/* 0000049c 000000e0 */ static int IopInitMain() {
+	/* 0x10(sp) */ ThreadParam param;
+	/* 0x28(sp) */ int tmp;
+}
+
+/* 0000057c 000000e8 */ static int IopSetTimer() {
+	/* 0x10(sp) */ SysClock clock;
+}
+
+/* 00000664 00000070 */ static u_int IopIntrFunc(/* 0x18(sp) */ IOP_SYS_CTRL *iscp) {}
+/* 000006d4 00000068 */ static void IopStereoChange(/* 0x18(sp) */ IOP_COMMAND *icp) {}
+/* 0000073c 00000070 */ static int IopMain() {}
+/* 000007ac 00000030 */ IOP_STAT* GetIopStatP() {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/se/iopse.c
+// *****************************************************************************
+
+/* 000007e0 0000032c */ void ISeInit(/* 0x38(sp) */ int mode) {
+	/* 0x10(sp) */ sceSdEffectAttr r_attr;
+	/* 0x28(sp) */ SE_WRK_SET *swsp;
+	/* 0x2c(sp) */ int i;
+}
+
+/* 00000b0c 00000030 */ void ISeMain() {}
+
+/* 00000b3c 000001c8 */ static void ISeEndCheck() {
+	/* 0x10(sp) */ SE_VSTAT *svsp;
+	/* 0x14(sp) */ int i;
+	/* 0x18(sp) */ int j;
+	/* 0x20(sp) */ u_int core_flg[2];
+}
+
+/* 00000d04 000000c4 */ static void ISeWrkUpdate() {
+	/* 0x10(sp) */ SE_WRK_SET *swsp;
+	/* 0x14(sp) */ SE_VSTAT *svsp;
+	/* 0x18(sp) */ int i;
+}
+
+/* 00000dc8 00000154 */ void ISeCmd(/* 0x18(sp) */ IOP_COMMAND *icp) {}
+/* 00000f1c 00000064 */ static void IopSoundMasterVolChange(/* 0x18(sp) */ IOP_COMMAND *icp) {}
+/* 00000f80 00000068 */ static void IopSoundSteMonoChange(/* 0x18(sp) */ IOP_COMMAND *icp) {}
+
+/* 00000fe8 0000024c */ static int ISePlay(/* 0x20(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ int vn;
+	/* 0x14(sp) */ SE_WRK_SET *swsp;
+}
+
+/* 00001234 000001e0 */ static void ISeStop(/* 0x28(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ SE_WRK_SET *swsp;
+	/* 0x14(sp) */ SE_VSTAT *svp;
+	/* 0x18(sp) */ int vn;
+	/* 0x1c(sp) */ int candv;
+}
+
+/* 00001414 000000f4 */ static void ISeVol(/* 0x28(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ SE_WRK_SET *swsp;
+	/* 0x14(sp) */ int vn;
+	/* 0x18(sp) */ int candv;
+}
+
+/* 00001508 0000006c */ static void ISeEfctVol(/* 0x20(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ u_short evol;
+}
+
+/* 00001574 000000f4 */ static void ISePitch(/* 0x28(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ SE_WRK_SET *swsp;
+	/* 0x14(sp) */ int vn;
+	/* 0x18(sp) */ int candv;
+}
+
+/* 00001668 0000019c */ static void ISeAllStop(/* 0x30(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ int i;
+	/* 0x14(sp) */ int candv;
+	/* 0x18(sp) */ int vn;
+	/* 0x1c(sp) */ SE_WRK_SET *swsp;
+	/* 0x20(sp) */ SE_VSTAT *svp;
+}
+
+/* 00001804 00000020 */ static void ISeQuit() {}
+
+/* 00001824 000000e8 */ static void ISePos(/* 0x20(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ SE_WRK_SET *swsp;
+	/* 0x14(sp) */ int candv;
+}
+
+/* 0000190c 000001a8 */ static void SeChangeSetDataPlay(/* 0x18(sp) */ SE_WRK_SET *swsp, /* 0x1c(sp) */ IOP_COMMAND *icp) {}
+/* 00001ab4 00000118 */ static void SeChangeSetDataPos(/* 0x18(sp) */ SE_WRK_SET *swsp, /* 0x1c(sp) */ IOP_COMMAND *icp) {}
+/* 00001bcc 0000089c */ static void GetPrimAndBufNo(/* 0x8(sp) */ short int *prm_no, /* 0xc(sp) */ u_char *buf_no, /* 0x10(sp) */ int v_no) {}
+/* 00002468 00000324 */ void SeSetStartPoint(/* 0x0(sp) */ u_char type, /* 0x14(sp) */ u_int no) {}
+/* 0000278c 00000400 */ static void SeGenerateVolPich(/* 0x10(sp) */ SE_WRK_SET *swsp, /* 0x14(sp) */ int vol_rate, /* 0x18(sp) */ int pan, /* 0x1c(sp) */ int phase) {}
+/* 00002b8c 0000008c */ static SE_VSTAT* GetSeVstat(/* 0x18(sp) */ int sv_no) {}
+/* 00002c18 00000084 */ static SE_WRK_SET* GetSeWrkSetP(/* 0x8(sp) */ int v_no) {}
+
+/* 00002c9c 000001b8 */ static void SeSetSeWrk(/* 0x20(sp) */ SE_WRK_SET *swsp) {
+	/* 0x10(sp) */ int num;
+	/* 0x14(sp) */ int candv;
+}
+
+/* 00002e54 00000390 */ static void SeSetMix(/* 0x20(sp) */ int core_id, /* 0x24(sp) */ int v_no, /* 0x10(sp) */ char mix_mode) {
+	/* 0x14(sp) */ u_int reg;
+}
+
+/* 000031e4 000000cc */ static int CidAndVnum(/* 0x8(sp) */ int voice_num, /* 0xc(sp) */ int voice_sift) {}
+/* 000032b0 00000050 */ u_int SeGetSndBufTop(/* 0x8(sp) */ int pos) {}
+/* 00003300 00000070 */ void SeSetMasterVol(/* 0x10(sp) */ u_short mvol) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/se/sedat.c
+// *****************************************************************************
+
+/* 00003370 0000004c */ SE_PARAM* SeGetSeParamTbl(/* 0x8(sp) */ int num) {}
+/* 000033bc 00000050 */ int GetSeAdrs(/* 0x8(sp) */ int se_no) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/iopadpcm.c
+// *****************************************************************************
+
+/* 00003410 000000d8 */ void IAdpcmCmd(/* 0x18(sp) */ IOP_COMMAND *icp) {}
+
+/* 000034e8 00000578 */ void IAdpcmAddCmd(/* 0x50(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ ADPCM_CMD cmd;
+	/* 0x30(sp) */ ADPCM_CMD *nc;
+	/* 0x34(sp) */ ADPCM_CMD *ac;
+	/* 0x38(sp) */ int i;
+	/* 0x3c(sp) */ int j;
+	/* 0x40(sp) */ int k;
+}
+
+/* 00003a60 000000c0 */ void IAdpcmSetSpu2Irq() {
+	/* data 22d0 */ static u_short pitch;
+}
+
+/* 00003b20 00000194 */ void IAdpcmMain() {
+	/* 0x10(sp) */ IOP_ADPCM *iap;
+}
+
+/* 00003cb4 00000320 */ void IAdpcmMain2() {
+	/* 0x10(sp) */ IOP_ADPCM *iap;
+	/* 0x18(sp) */ ADPCM_CMD ac;
+}
+
+/* 00003fd4 000001a0 */ void IAdpcmInit(/* 0x18(sp) */ int dev_init) {}
+
+/* 00004174 0000053c */ void IAdpcmPreLoad(/* 0x28(sp) */ ADPCM_CMD *acp) {
+	/* 0x18(sp) */ int channel;
+	/* 0x1c(sp) */ u_char endld_flg;
+}
+
+/* 000046b0 000003e4 */ void IAdpcmPreLoadEnd(/* 0x28(sp) */ int channel) {
+	/* 0x18(sp) */ int i;
+	/* data 22d4 */ static int cnt;
+}
+
+/* 00004a94 00000284 */ void IAdpcmPlay(/* 0x20(sp) */ ADPCM_CMD *acp) {
+	/* 0x10(sp) */ u_char channel;
+}
+
+/* 00004d18 000002f8 */ void IAdpcmStop(/* 0x20(sp) */ ADPCM_CMD *acp) {
+	/* 0x10(sp) */ u_char channel;
+}
+
+/* 00005010 00000024 */ static void IAdpcmFadeVol(/* 0x8(sp) */ IOP_COMMAND *iop) {}
+
+/* 00005034 000000d0 */ static void IAdpcmPos(/* 0x20(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ int channel;
+}
+
+/* 00005104 00000058 */ static void IAdpcmMvol(/* 0x20(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ u_short mvol;
+}
+
+/* 0000515c 00000100 */ static void AdpcmSpu2IntrHander(/* 0x20(sp) */ int core_bit, /* 0x24(sp) */ void *data) {
+	/* 0x10(sp) */ IOP_ADPCM *ia;
+}
+
+/* 0000525c 000004bc */ static int AdpcmTransCB(/* 0x20(sp) */ int channel, /* 0x24(sp) */ void *common) {}
+
+/* 00005718 00000598 */ void IAdpcmReadCh0() {
+	/* 0x18(sp) */ int count;
+	/* 0x1c(sp) */ int start;
+	/* 0x20(sp) */ u_int remain_t;
+	/* 0x24(sp) */ u_int remain_l;
+	/* 0x28(sp) */ u_short tmp_tune_no;
+	/* 0x30(sp) */ ADPCM_CMD cmd;
+	/* 0x50(sp) */ u_char loop_ok;
+}
+
+/* 00005cb0 0000005c */ void IAdpcmTuneEndStop(/* 0x10(sp) */ u_char channel) {
+	/* 0x18(sp) */ ADPCM_CMD cmd;
+}
+
+/* 00005d0c 000001ec */ void IAdpcmTuneEndLoop(/* 0x0(sp) */ u_char channel, /* 0x1(sp) */ u_char fade, /* 0x2(sp) */ u_short tune_no) {
+	/* 0x8(sp) */ ADPCM_CMD cmd;
+}
+
+/* 00005ef8 00000550 */ void IAdpcmReadCh1() {
+	/* 0x18(sp) */ int count;
+	/* 0x1c(sp) */ int start;
+	/* 0x20(sp) */ u_int remain_t;
+	/* 0x24(sp) */ u_int remain_l;
+	/* 0x28(sp) */ u_short tmp_tune_no;
+	/* 0x30(sp) */ ADPCM_CMD cmd;
+	/* 0x50(sp) */ u_char loop_ok;
+}
+
+/* 00006448 00000140 */ static void SetLoopFlag(/* 0x18(sp) */ u_int *st_addr, /* 0x1c(sp) */ u_int szvag, /* 0x0(sp) */ u_char st_end) {
+	/* 0x4(sp) */ int i;
+	/* 0x8(sp) */ u_char *lpflgp;
+}
+
+/* 00006588 00000184 */ static void SetLoopFlgAll(/* 0x10(sp) */ u_short core) {
+	/* 0x14(sp) */ u_char *pos;
+	/* 0x18(sp) */ int i;
+	/* 0x1c(sp) */ int times;
+}
+
+/* 0000670c 00000184 */ void SetLoopFlgAll2(/* 0x10(sp) */ u_short core) {
+	/* 0x14(sp) */ u_char *pos;
+	/* 0x18(sp) */ int i;
+	/* 0x1c(sp) */ int times;
+}
+
+/* 00006890 00000214 */ void SetLoopFlgSize(/* 0x28(sp) */ u_int size_byte, /* 0x2c(sp) */ u_int *start, /* 0x0(sp) */ u_short core) {
+	/* 0x4(sp) */ int i;
+	/* 0x8(sp) */ int j;
+	/* 0xc(sp) */ int k;
+	/* 0x10(sp) */ int lt0;
+	/* 0x14(sp) */ int lt1;
+	/* 0x18(sp) */ u_char *lpflgp;
+}
+
+/* 00006aa4 00000128 */ void IAdpcmLoadEndStream(/* 0x8(sp) */ int channel) {}
+/* 00006bcc 00000038 */ void IAdpcmLoadEndPreOnly(/* 0x18(sp) */ int channel) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/ia_func.c
+// *****************************************************************************
+
+/* 00006c10 00000180 */ void IaInitDev(/* 0x10(sp) */ u_char channel) {}
+
+/* 00006d90 00000130 */ static int IAdpcmMakeThread(/* 0x10(sp) */ u_char channel) {
+	/* 0x18(sp) */ ThreadParam param;
+}
+
+/* 00006ec0 00000038 */ void IaInitEffect() {}
+/* 00006ef8 000000e0 */ void IaInitVolume() {}
+
+/* 00006fd8 0000004c */ void IaDbgMemoryCheck() {
+	/* 0x10(sp) */ int tmp;
+}
+
+/* 00007024 00000144 */ void IaSetRegSsa(/* 0x10(sp) */ u_char channel) {}
+/* 00007168 000001e0 */ void IaSetRegAdsr(/* 0x10(sp) */ u_char channel) {}
+/* 00007348 00000250 */ void IaSetRegVol(/* 0x10(sp) */ u_char channel) {}
+/* 00007598 00000148 */ void IaSetRegPitch(/* 0x10(sp) */ u_char channel) {}
+/* 000076e0 000000c8 */ void IaSetRegKon(/* 0x10(sp) */ u_char channel) {}
+/* 000077a8 000000c8 */ void IaSetRegKoff(/* 0x10(sp) */ u_char channel) {}
+
+/* 00007870 00000188 */ void IaSetWrkVolPanPitch(/* 0x10(sp) */ u_char channel, /* 0x12(sp) */ u_short pan, /* 0x14(sp) */ u_short master_vol, /* 0x16(sp) */ u_short pitch) {
+	/* 0x18(sp) */ ADPCM_POS_CALC pcalc;
+}
+
+/* 000079f8 00000084 */ void IaSetWrkFadeParam(/* 0x0(sp) */ u_char channel, /* 0x14(sp) */ int fade_flm, /* 0x2(sp) */ u_short target_vol) {}
+/* 00007a7c 000000d8 */ void IaSetWrkFadeMode(/* 0x0(sp) */ u_char channel, /* 0x1(sp) */ u_char mode, /* 0x2(sp) */ u_short target_vol, /* 0x1c(sp) */ int fade_flm) {}
+/* 00007b54 000000dc */ void IaSetWrkFadeInit(/* 0x0(sp) */ u_char channel) {}
+/* 00007c30 00000284 */ void GetPosCalc(/* 0x10(sp) */ ADPCM_POS_CALC *calcp) {}
+/* 00007eb4 00000060 */ void IaSetSteMono() {}
+
+/* 00007f14 000000f8 */ void IaSetStopBlock(/* 0x18(sp) */ u_char channel) {
+	/* 0x20(sp) */ u_char sb_tbl[64];
+}
+
+/* 0000800c 00000070 */ void IaSetMasterVol(/* 0x10(sp) */ u_short mvol) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/ia_cmd.c
+// *****************************************************************************
+
+/* 00008080 00000058 */ void InitAdpcmCmdBuf() {}
+
+/* 000080d8 00000130 */ void IAdpcmCmdSlide() {
+	/* 0x0(sp) */ ADPCM_CMD *ac0;
+	/* 0x4(sp) */ ADPCM_CMD *ac1;
+	/* 0x8(sp) */ int i;
+}
+
+/* 00008208 00000068 */ u_char IAdpcmChkCmdExist() {}
+
+/* 00008270 0000021c */ void IAdpcmCmdPlay() {
+	/* 0x10(sp) */ ADPCM_CMD ac;
+	/* data 22e0 */ static int c;
+}
+
+/* 0000848c 0000011c */ void IAdpcmCmdStop() {}
+
+/* 000085a8 00000118 */ void IAdpcmCmdPreLoad() {
+	/* 0x10(sp) */ ADPCM_CMD ac;
+}
+
+/* 000086c0 00000094 */ void IAdpcmCmdPause() {}
+/* 00008754 00000068 */ void IAdpcmCmdRestart() {}
+/* 000087bc 00000024 */ void DbgDispAdpcmCmdWrk(/* 0x8(sp) */ ADPCM_CMD *acp) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/cdvd/iopcdvd.c
+// *****************************************************************************
+
+/* 000087e0 000000d0 */ void ICdvdCmd(/* 0x18(sp) */ IOP_COMMAND *icp) {}
+/* 000088b0 00000054 */ void ICdvdInit(/* 0x18(sp) */ int reset) {}
+
+/* 00008904 000004dc */ static void ICdvdInitOnce() {
+	/* 0x10(sp) */ int tmp;
+	/* 0x14(sp) */ char ld_error;
+	/* 0x18(sp) */ u_int ld_cnt;
+	/* 0x20(sp) */ sceCdlFILE cdlf;
+	/* 0x48(sp) */ sceSifDmaData sdd;
+	/* 0x58(sp) */ u_int dma_id;
+	/* 0x5c(sp) */ int oldstat;
+	/* 0x60(sp) */ int i;
+	/* 0x64(sp) */ u_int ret_count0;
+	/* 0x68(sp) */ u_int ret_count1;
+	/* 0x70(sp) */ char fname[80];
+}
+
+/* 00008de0 000000a4 */ static void ICdvdInitSoftReset() {}
+
+/* 00008e84 000007a4 */ void ICdvdMain() {
+	/* 0x10(sp) */ int error_stat;
+	/* 0x10(sp) */ int pos;
+	/* 0x14(sp) */ int error_stat;
+}
+
+/* 00009628 0000039c */ static void ICdvdTransCheck() {
+	/* 0x10(sp) */ int i;
+}
+
+/* 000099c4 00000608 */ static void ICdvdTransFinishedData() {
+	/* 0x18(sp) */ sceSifDmaData sdd;
+	/* 0x28(sp) */ int oldstat;
+	/* 0x2c(sp) */ u_int trans_size;
+}
+
+/* 00009fcc 00000058 */ static int ICdvdSeTransCB(/* 0x18(sp) */ int channel, /* 0x1c(sp) */ void *data) {}
+/* 0000a024 0000015c */ static void ICdvdDataReadOnceSector() {}
+/* 0000a180 00000054 */ u_char ICdvdOnPreLoadEnd() {}
+
+/* 0000a1d4 00000134 */ static void ICdvdAdpcmLoad() {
+	/* 0x10(sp) */ u_char pos;
+}
+
+/* 0000a308 00000020 */ static void ICdvdStrLoad() {}
+
+/* 0000a328 00000078 */ static int ICdvdCheckLoadError() {
+	/* 0x10(sp) */ int result;
+}
+
+/* 0000a3a0 0000005c */ void ICdvdBreak() {}
+/* 0000a3fc 00000128 */ static int ICdvdSectorLoad(/* 0x18(sp) */ CDVD_REQ_BUF *req_bufp) {}
+
+/* 0000a524 00000168 */ static int ICdvdCheckBufStatus() {
+	/* 0x0(sp) */ int i;
+}
+
+/* 0000a68c 0000002c */ static void ICdvdSeek() {}
+
+/* 0000a6b8 00000208 */ static void ICdvdAddCmd(/* 0x38(sp) */ IOP_COMMAND *icp) {
+	/* 0x10(sp) */ CDVD_REQ_BUF req_buf;
+}
+
+/* 0000a8c0 000000d8 */ static void ICdvdTransSe(/* 0x28(sp) */ IOP_COMMAND *icp) {
+	/* 0x18(sp) */ u_int size;
+	/* 0x1c(sp) */ u_int addr;
+}
+
+/* 0000a998 00000080 */ int ICdvdTransSeEnd() {}
+/* 0000aa18 00000028 */ static void ICdvdTransSeInit() {}
+/* 0000aa40 00000088 */ static void ICdvdExecCmd() {}
+
+/* 0000aac8 000000e8 */ static int ICdvdExecCmdSub(/* 0x20(sp) */ CDVD_REQ_BUF *req_bufp) {
+	/* 0x10(sp) */ int ret_param;
+}
+
+/* 0000abb0 00000078 */ static void ICdvdSetRetStat(/* 0x10(sp) */ int id, /* 0x0(sp) */ u_char stat) {}
+/* 0000ac28 000000a4 */ static void ICdvdSetRetStatFinish(/* 0x8(sp) */ int id) {}
+
+/* 0000accc 00000084 */ void ICdvdSetRetStatClear() {
+	/* 0x0(sp) */ CDVD_LOAD_STAT *clsp;
+	/* 0x4(sp) */ int i;
+}
+
+/* 0000ad50 000000a4 */ void ICdvdLoadReqPcm(/* 0x10(sp) */ u_int lsn, /* 0x14(sp) */ u_int size_sec, /* 0x18(sp) */ void *buf, /* 0x0(sp) */ u_char pre) {}
+
+/* 0000adf4 0000014c */ void ICdvdLoadReqAdpcm(/* 0x10(sp) */ int lsn, /* 0x14(sp) */ u_int size_now, /* 0x18(sp) */ void *buf, /* 0x0(sp) */ u_char channel, /* 0x20(sp) */ int req_type, /* 0x24(sp) */ int endld_flg) {
+	/* 0x1(sp) */ u_char req_type;
+	/* 0x2(sp) */ u_char endld_flg;
+}

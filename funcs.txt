@@ -1,0 +1,423 @@
+// File written by stdump development version on 2025-11-19
+// 
+// Input file:
+//   IOPSYS.IRX
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/iopmain.c
+// *****************************************************************************
+
+int start(int argc, char **argv) {
+	ThreadParam param;
+	int tmp;
+}
+
+static int IopMainLoop() {
+	sceSifQueueData qd;
+	sceSifServeData sd;
+}
+
+static void* IopDrvFunc(unsigned int command, void *data, int size) {
+	IOP_COMMAND *icp;
+	int i;
+}
+
+static void IopInitDevice() {}
+
+static int IopInitMain() {
+	ThreadParam param;
+	int tmp;
+}
+
+static int IopSetTimer() {
+	SysClock clock;
+}
+
+static u_int IopIntrFunc(IOP_SYS_CTRL *iscp) {}
+static void IopStereoChange(IOP_COMMAND *icp) {}
+static int IopMain() {}
+IOP_STAT* GetIopStatP() {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/se/iopse.c
+// *****************************************************************************
+
+void ISeInit(int mode) {
+	sceSdEffectAttr r_attr;
+	SE_WRK_SET *swsp;
+	int i;
+}
+
+void ISeMain() {}
+
+static void ISeEndCheck() {
+	SE_VSTAT *svsp;
+	int i;
+	int j;
+	u_int core_flg[2];
+}
+
+static void ISeWrkUpdate() {
+	SE_WRK_SET *swsp;
+	SE_VSTAT *svsp;
+	int i;
+}
+
+void ISeCmd(IOP_COMMAND *icp) {}
+static void IopSoundMasterVolChange(IOP_COMMAND *icp) {}
+static void IopSoundSteMonoChange(IOP_COMMAND *icp) {}
+
+static int ISePlay(IOP_COMMAND *icp) {
+	int vn;
+	SE_WRK_SET *swsp;
+}
+
+static void ISeStop(IOP_COMMAND *icp) {
+	SE_WRK_SET *swsp;
+	SE_VSTAT *svp;
+	int vn;
+	int candv;
+}
+
+static void ISeVol(IOP_COMMAND *icp) {
+	SE_WRK_SET *swsp;
+	int vn;
+	int candv;
+}
+
+static void ISeEfctVol(IOP_COMMAND *icp) {
+	u_short evol;
+}
+
+static void ISePitch(IOP_COMMAND *icp) {
+	SE_WRK_SET *swsp;
+	int vn;
+	int candv;
+}
+
+static void ISeAllStop(IOP_COMMAND *icp) {
+	int i;
+	int candv;
+	int vn;
+	SE_WRK_SET *swsp;
+	SE_VSTAT *svp;
+}
+
+static void ISeQuit() {}
+
+static void ISePos(IOP_COMMAND *icp) {
+	SE_WRK_SET *swsp;
+	int candv;
+}
+
+static void SeChangeSetDataPlay(SE_WRK_SET *swsp, IOP_COMMAND *icp) {}
+static void SeChangeSetDataPos(SE_WRK_SET *swsp, IOP_COMMAND *icp) {}
+static void GetPrimAndBufNo(short int *prm_no, u_char *buf_no, int v_no) {}
+void SeSetStartPoint(u_char type, u_int no) {}
+static void SeGenerateVolPich(SE_WRK_SET *swsp, int vol_rate, int pan, int phase) {}
+static SE_VSTAT* GetSeVstat(int sv_no) {}
+static SE_WRK_SET* GetSeWrkSetP(int v_no) {}
+
+static void SeSetSeWrk(SE_WRK_SET *swsp) {
+	int num;
+	int candv;
+}
+
+static void SeSetMix(int core_id, int v_no, char mix_mode) {
+	u_int reg;
+}
+
+static int CidAndVnum(int voice_num, int voice_sift) {}
+u_int SeGetSndBufTop(int pos) {}
+void SeSetMasterVol(u_short mvol) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/se/sedat.c
+// *****************************************************************************
+
+SE_PARAM* SeGetSeParamTbl(int num) {}
+int GetSeAdrs(int se_no) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/iopadpcm.c
+// *****************************************************************************
+
+void IAdpcmCmd(IOP_COMMAND *icp) {}
+
+void IAdpcmAddCmd(IOP_COMMAND *icp) {
+	ADPCM_CMD cmd;
+	ADPCM_CMD *nc;
+	ADPCM_CMD *ac;
+	int i;
+	int j;
+	int k;
+}
+
+void IAdpcmSetSpu2Irq() {
+	static u_short pitch;
+}
+
+void IAdpcmMain() {
+	IOP_ADPCM *iap;
+}
+
+void IAdpcmMain2() {
+	IOP_ADPCM *iap;
+	ADPCM_CMD ac;
+}
+
+void IAdpcmInit(int dev_init) {}
+
+void IAdpcmPreLoad(ADPCM_CMD *acp) {
+	int channel;
+	u_char endld_flg;
+}
+
+void IAdpcmPreLoadEnd(int channel) {
+	int i;
+	static int cnt;
+}
+
+void IAdpcmPlay(ADPCM_CMD *acp) {
+	u_char channel;
+}
+
+void IAdpcmStop(ADPCM_CMD *acp) {
+	u_char channel;
+}
+
+static void IAdpcmFadeVol(IOP_COMMAND *iop) {}
+
+static void IAdpcmPos(IOP_COMMAND *icp) {
+	int channel;
+}
+
+static void IAdpcmMvol(IOP_COMMAND *icp) {
+	u_short mvol;
+}
+
+static void AdpcmSpu2IntrHander(int core_bit, void *data) {
+	IOP_ADPCM *ia;
+}
+
+static int AdpcmTransCB(int channel, void *common) {}
+
+void IAdpcmReadCh0() {
+	int count;
+	int start;
+	u_int remain_t;
+	u_int remain_l;
+	u_short tmp_tune_no;
+	ADPCM_CMD cmd;
+	u_char loop_ok;
+}
+
+void IAdpcmTuneEndStop(u_char channel) {
+	ADPCM_CMD cmd;
+}
+
+void IAdpcmTuneEndLoop(u_char channel, u_char fade, u_short tune_no) {
+	ADPCM_CMD cmd;
+}
+
+void IAdpcmReadCh1() {
+	int count;
+	int start;
+	u_int remain_t;
+	u_int remain_l;
+	u_short tmp_tune_no;
+	ADPCM_CMD cmd;
+	u_char loop_ok;
+}
+
+static void SetLoopFlag(u_int *st_addr, u_int szvag, u_char st_end) {
+	int i;
+	u_char *lpflgp;
+}
+
+static void SetLoopFlgAll(u_short core) {
+	u_char *pos;
+	int i;
+	int times;
+}
+
+void SetLoopFlgAll2(u_short core) {
+	u_char *pos;
+	int i;
+	int times;
+}
+
+void SetLoopFlgSize(u_int size_byte, u_int *start, u_short core) {
+	int i;
+	int j;
+	int k;
+	int lt0;
+	int lt1;
+	u_char *lpflgp;
+}
+
+void IAdpcmLoadEndStream(int channel) {}
+void IAdpcmLoadEndPreOnly(int channel) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/ia_func.c
+// *****************************************************************************
+
+void IaInitDev(u_char channel) {}
+
+static int IAdpcmMakeThread(u_char channel) {
+	ThreadParam param;
+}
+
+void IaInitEffect() {}
+void IaInitVolume() {}
+
+void IaDbgMemoryCheck() {
+	int tmp;
+}
+
+void IaSetRegSsa(u_char channel) {}
+void IaSetRegAdsr(u_char channel) {}
+void IaSetRegVol(u_char channel) {}
+void IaSetRegPitch(u_char channel) {}
+void IaSetRegKon(u_char channel) {}
+void IaSetRegKoff(u_char channel) {}
+
+void IaSetWrkVolPanPitch(u_char channel, u_short pan, u_short master_vol, u_short pitch) {
+	ADPCM_POS_CALC pcalc;
+}
+
+void IaSetWrkFadeParam(u_char channel, int fade_flm, u_short target_vol) {}
+void IaSetWrkFadeMode(u_char channel, u_char mode, u_short target_vol, int fade_flm) {}
+void IaSetWrkFadeInit(u_char channel) {}
+void GetPosCalc(ADPCM_POS_CALC *calcp) {}
+void IaSetSteMono() {}
+
+void IaSetStopBlock(u_char channel) {
+	u_char sb_tbl[64];
+}
+
+void IaSetMasterVol(u_short mvol) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/ia_cmd.c
+// *****************************************************************************
+
+void InitAdpcmCmdBuf() {}
+
+void IAdpcmCmdSlide() {
+	ADPCM_CMD *ac0;
+	ADPCM_CMD *ac1;
+	int i;
+}
+
+u_char IAdpcmChkCmdExist() {}
+
+void IAdpcmCmdPlay() {
+	ADPCM_CMD ac;
+	static int c;
+}
+
+void IAdpcmCmdStop() {}
+
+void IAdpcmCmdPreLoad() {
+	ADPCM_CMD ac;
+}
+
+void IAdpcmCmdPause() {}
+void IAdpcmCmdRestart() {}
+void DbgDispAdpcmCmdWrk(ADPCM_CMD *acp) {}
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/cdvd/iopcdvd.c
+// *****************************************************************************
+
+void ICdvdCmd(IOP_COMMAND *icp) {}
+void ICdvdInit(int reset) {}
+
+static void ICdvdInitOnce() {
+	int tmp;
+	char ld_error;
+	u_int ld_cnt;
+	sceCdlFILE cdlf;
+	sceSifDmaData sdd;
+	u_int dma_id;
+	int oldstat;
+	int i;
+	u_int ret_count0;
+	u_int ret_count1;
+	char fname[80];
+}
+
+static void ICdvdInitSoftReset() {}
+
+void ICdvdMain() {
+	int error_stat;
+	int pos;
+	int error_stat;
+}
+
+static void ICdvdTransCheck() {
+	int i;
+}
+
+static void ICdvdTransFinishedData() {
+	sceSifDmaData sdd;
+	int oldstat;
+	u_int trans_size;
+}
+
+static int ICdvdSeTransCB(int channel, void *data) {}
+static void ICdvdDataReadOnceSector() {}
+u_char ICdvdOnPreLoadEnd() {}
+
+static void ICdvdAdpcmLoad() {
+	u_char pos;
+}
+
+static void ICdvdStrLoad() {}
+
+static int ICdvdCheckLoadError() {
+	int result;
+}
+
+void ICdvdBreak() {}
+static int ICdvdSectorLoad(CDVD_REQ_BUF *req_bufp) {}
+
+static int ICdvdCheckBufStatus() {
+	int i;
+}
+
+static void ICdvdSeek() {}
+
+static void ICdvdAddCmd(IOP_COMMAND *icp) {
+	CDVD_REQ_BUF req_buf;
+}
+
+static void ICdvdTransSe(IOP_COMMAND *icp) {
+	u_int size;
+	u_int addr;
+}
+
+int ICdvdTransSeEnd() {}
+static void ICdvdTransSeInit() {}
+static void ICdvdExecCmd() {}
+
+static int ICdvdExecCmdSub(CDVD_REQ_BUF *req_bufp) {
+	int ret_param;
+}
+
+static void ICdvdSetRetStat(int id, u_char stat) {}
+static void ICdvdSetRetStatFinish(int id) {}
+
+void ICdvdSetRetStatClear() {
+	CDVD_LOAD_STAT *clsp;
+	int i;
+}
+
+void ICdvdLoadReqPcm(u_int lsn, u_int size_sec, void *buf, u_char pre) {}
+
+void ICdvdLoadReqAdpcm(int lsn, u_int size_now, void *buf, u_char channel, int req_type, int endld_flg) {
+	u_char req_type;
+	u_char endld_flg;
+}

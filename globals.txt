@@ -1,0 +1,70 @@
+// File written by stdump development version on 2025-11-19
+// 
+// Input file:
+//   IOPSYS.IRX
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/iopmain.c
+// *****************************************************************************
+
+/* data 0 */ static int iop_loop_thid;
+/* bss 300 */ IOP_STAT iop_stat;
+/* bss 0 */ IOP_MASTER_VOL iop_mv;
+/* bss 480 */ IOP_SYS_CTRL iop_sys_ctrl;
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/se/iopse.c
+// *****************************************************************************
+
+/* data 10 */ u_int snd_buf_top[0];
+/* bss 0 */ static SE_WRK_SET se_wrk_set[24];
+/* bss 8a0 */ SE_START_POINT se_start_point;
+/* bss 8 */ u_int se_start_flg;
+/* bss 4 */ u_int se_stop_flg;
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/se/sedat.c
+// *****************************************************************************
+
+/* data 90 */ SE_PARAM se_param_tbl[0];
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/adpcm/iopadpcm.c
+// *****************************************************************************
+
+/* bss a00 */ IOP_ADPCM iop_adpcm[2];
+/* bss 10 */ u_char *AdpcmIopBuf[2];
+/* bss 18 */ u_char *AdpcmSpuBuf[2];
+/* bss 9e0 */ ADPCM_CMD now_cmd;
+/* bss 8e0 */ ADPCM_CMD cmd_buf[8];
+
+// *****************************************************************************
+// FILE -- /home/m_nagaura/reikoku/src/os/iop/cdvd/iopcdvd.c
+// *****************************************************************************
+
+/* bss bc0 */ CDVD_STAT cdvd_stat;
+/* bss c60 */ CDVD_REQ_BUF cdvd_req[32];
+/* bss ac0 */ CDVD_LOAD_STAT load_stat[32];
+/* bss 1060 */ CDVD_TRANS_STAT cdvd_trans[2];
+/* bss 20 */ u_int *load_buf_table[2];
+
+// *****************************************************************************
+// FILE -- (unknown)
+// *****************************************************************************
+
+/* nil d990 */ iop_stat;
+/* nil d670 */ AdpcmIopBuf;
+/* nil db10 */ iop_sys_ctrl;
+/* nil e150 */ load_stat;
+/* nil e250 */ cdvd_stat;
+/* nil d678 */ AdpcmSpuBuf;
+/* nil df30 */ se_start_point;
+/* nil df70 */ cmd_buf;
+/* nil e070 */ now_cmd;
+/* nil e090 */ iop_adpcm;
+/* nil e2f0 */ cdvd_req;
+/* nil d664 */ se_stop_flg;
+/* nil d680 */ load_buf_table;
+/* nil d668 */ se_start_flg;
+/* nil e6f0 */ cdvd_trans;
+/* nil d660 */ iop_mv;

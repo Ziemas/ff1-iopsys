@@ -79,42 +79,6 @@ enum KernelErrorCode {
     KE_ILLEGAL_MEMSIZE = -427
 };
 
-struct _libhead { // 0x14
-    /* 0x00 */ struct _libhead* next;
-    /* 0x04 */ struct _libcaller* client;
-    /* 0x08 */ short unsigned int version;
-    /* 0x0a */ short unsigned int flags;
-    /* 0x0c */ char name[8];
-};
-
-typedef struct _libhead libhead;
-
-struct _libcaller { // 0x14
-    /* 0x00:00 */ long unsigned int magic : 32;
-    /* 0x04 */ struct _libcaller* client;
-    /* 0x08 */ short unsigned int version;
-    /* 0x0a */ short unsigned int flags;
-    /* 0x0c */ char name[8];
-};
-
-typedef struct _libcaller libcaller;
-
-struct _moduleinfo { // 0x8
-    /* 0x0 */ char* name;
-    /* 0x4 */ short unsigned int version;
-};
-
-typedef struct _moduleinfo ModuleInfo;
-
-struct _libinfo { // 0x14
-    /* 0x00 */ long unsigned int dummy[2];
-    /* 0x08 */ short unsigned int version;
-    /* 0x0a */ short unsigned int dummy2;
-    /* 0x0c */ char name[8];
-};
-
-typedef struct _libinfo LibInfo;
-
 enum EXCEP {
     EXCEP_Int = 0,
     EXCEP_MOD = 1,

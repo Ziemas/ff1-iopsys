@@ -1,6 +1,7 @@
-#include "common.h"
+#include "iopcdvd.h"
 
 #include "adpcm/iopadpcm.h"
+#include "iopmain.h"
 #include "libsd.h"
 #include "se/iopse.h"
 
@@ -11,11 +12,11 @@
 #include "string.h"
 #include "sysmem.h"
 
-/* bss bc0 */ CDVD_STAT cdvd_stat;
-/* bss c60 */ CDVD_REQ_BUF cdvd_req[32];
-/* bss ac0 */ CDVD_LOAD_STAT load_stat[32];
-/* bss 1060 */ CDVD_TRANS_STAT cdvd_trans[2];
-/* bss 20 */ u_int* load_buf_table[2];
+CDVD_STAT cdvd_stat;
+CDVD_REQ_BUF cdvd_req[32];
+CDVD_LOAD_STAT load_stat[32];
+CDVD_TRANS_STAT cdvd_trans[2];
+u_int* load_buf_table[2];
 
 static void ICdvdInitOnce();
 static void ICdvdInitSoftReset();

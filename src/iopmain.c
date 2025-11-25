@@ -1,15 +1,21 @@
-#include "common.h"
+#include "iopmain.h"
 
+#include "se/iopse.h"
+#include "adpcm/iopadpcm.h"
+#include "cdvd/iopcdvd.h"
+
+#include "intrman.h"
+#include "introld.h"
 #include "libsd.h"
 #include "sifrpc.h"
 #include "sysmem.h"
 #include "thread.h"
 #include "timerman.h"
 
-/* data 0 */ static int iop_loop_thid = 0;
-/* bss 300 */ IOP_STAT iop_stat;
-/* bss 0 */ IOP_MASTER_VOL iop_mv;
-/* bss 480 */ IOP_SYS_CTRL iop_sys_ctrl;
+static int iop_loop_thid = 0;
+IOP_STAT iop_stat;
+IOP_MASTER_VOL iop_mv;
+IOP_SYS_CTRL iop_sys_ctrl;
 
 static int IopMainLoop();
 static void* IopDrvFunc(unsigned int command, void* data, int size);

@@ -1,4 +1,4 @@
-#include "common.h"
+#include "iopse.h"
 
 /* data 90 */ SE_PARAM se_param_tbl[] = {
     { .adrs = 0x0, .attribute = 0x0, .pitch = 0x804, .adsr1 = 0x80ff, .adsr2 = 0xdfeb, .efct = 0x3, .vol = 0x1e, .pan = 0x40 },

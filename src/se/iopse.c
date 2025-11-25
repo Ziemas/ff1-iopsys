@@ -1,13 +1,13 @@
 #include "iopse.h"
 
 #include "adpcm/iopadpcm.h"
+#include "iopmain.h"
 
-#include "common.h"
 #include "libsd.h"
 #include "sdmacro.h"
 #include "stdio.h"
 
-/* data 10 */ u_int snd_buf_top[] = {
+u_int snd_buf_top[] = {
     0x5400,
     0x5F400,
     0x68800,
@@ -40,10 +40,10 @@
     0x1F6780
 };
 
-/* bss 0 */ static SE_WRK_SET se_wrk_set[24];
-/* bss 8a0 */ SE_START_POINT se_start_point;
-/* bss 8 */ u_int se_start_flg;
-/* bss 4 */ u_int se_stop_flg;
+static SE_WRK_SET se_wrk_set[24];
+SE_START_POINT se_start_point;
+u_int se_start_flg;
+u_int se_stop_flg;
 
 static SE_VSTAT* GetSeVstat(int sv_no);
 static SE_WRK_SET* GetSeWrkSetP(int v_no);

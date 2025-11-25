@@ -1,6 +1,5 @@
-#include "common.h"
-
 #include "adpcm/iopadpcm.h"
+
 #include "se/iopse.h"
 
 #include "libsd.h"

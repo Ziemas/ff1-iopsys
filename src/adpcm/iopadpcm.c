@@ -1,18 +1,20 @@
 #include "iopadpcm.h"
 
 #include "cdvd/iopcdvd.h"
-#include "common.h"
+#include "iopmain.h"
 
+#include "intrman.h"
+#include "introld.h"
 #include "libsd.h"
 #include "loadcore.h"
 #include "memory.h"
 #include "thread.h"
 
-/* bss a00 */ IOP_ADPCM iop_adpcm[2];
-/* bss 10 */ u_char* AdpcmIopBuf[2];
-/* bss 18 */ u_char* AdpcmSpuBuf[2];
-/* bss 9e0 */ ADPCM_CMD now_cmd;
-/* bss 8e0 */ ADPCM_CMD cmd_buf[8];
+IOP_ADPCM iop_adpcm[2];
+u_char* AdpcmIopBuf[2];
+u_char* AdpcmSpuBuf[2];
+ADPCM_CMD now_cmd;
+ADPCM_CMD cmd_buf[8];
 
 void IAdpcmInit(int dev_init);
 void IAdpcmInit(int dev_init);

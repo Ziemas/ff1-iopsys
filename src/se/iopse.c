@@ -69,6 +69,7 @@ static void GetPrimAndBufNo(short int* prm_no, u_char* buf_no, int v_no);
 static void SeGenerateVolPich(SE_WRK_SET* swsp, int vol_rate, int pan, int phase);
 
 static int CidAndVnum(int voice_num, int voice_sift);
+static void SeSetMix(int core_id, int v_no, char mix_mode);
 
 void ISeInit(int mode)
 {
@@ -584,18 +585,132 @@ void SeSetStartPoint(u_char type, u_int no)
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", SeGenerateVolPich);
+static void SeGenerateVolPich(SE_WRK_SET* swsp, int vol_rate, int pan, int phase)
+{
+    swsp->tgt_vol_l = swsp->tgt_vol_r = ((0x1ff * vol_rate * swsp->param->vol) / 0x1000) >> 2;
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", GetSeVstat);
+    if (iop_mv.mono == 0) {
+        if ((swsp->param->attribute & 0x30) == 0x10) {
+            if (pan >= 641) {
+                swsp->tgt_vol_l *= ((pan - 640) / 640);
+                swsp->tgt_vol_r *= ((1270 - pan) / 640);
+            } else {
+                swsp->tgt_vol_r = 0;
+            }
+        } else if ((swsp->param->attribute & 0x30) == 0x20) {
+            if (pan < 640) {
+                swsp->tgt_vol_r *= (pan / 640);
+                swsp->tgt_vol_l *= ((640 - pan) / 640);
+            } else {
+                swsp->tgt_vol_l = 0;
+            }
+        } else if (pan < 640) {
+            swsp->tgt_vol_r = swsp->tgt_vol_l * pan / 640;
+        } else {
+            swsp->tgt_vol_l = swsp->tgt_vol_r * (1270 - pan) / 640;
+        }
+    } else {
+        if ((swsp->param->attribute & 0x30) != 0) {
+            swsp->tgt_vol_l >>= 1;
+            swsp->tgt_vol_r >>= 1;
+        } else {
+        }
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", GetSeWrkSetP);
+static SE_VSTAT* GetSeVstat(int sv_no)
+{
+    if (sv_no >= 0 && sv_no < 24) {
+        return &GetIopStatP()->sev_stat[sv_no];
+    } else {
+        return NULL;
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", SeSetSeWrk);
+static SE_WRK_SET* GetSeWrkSetP(int v_no)
+{
+    if (v_no >= 0 && v_no < 24) {
+        return &se_wrk_set[v_no];
+    } else {
+        return NULL;
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", SeSetMix);
+static void SeSetSeWrk(SE_WRK_SET* swsp)
+{
+    int num;
+    int candv;
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", CidAndVnum);
+    num = swsp->v_no;
+    candv = CidAndVnum(num + 24, 1);
+    sceSdSetAddr(candv | SD_VA_SSA, GetSeAdrs(swsp->prm_no) + snd_buf_top[swsp->buf_no]);
+    sceSdSetParam(candv | SD_VP_ADSR1, swsp->adsr1);
+    sceSdSetParam(candv | SD_VP_ADSR2, swsp->adsr2);
+    sceSdSetParam(candv | SD_VP_VOLL, swsp->vol_l);
+    sceSdSetParam(candv | SD_VP_VOLR, swsp->vol_r);
+    sceSdSetParam(candv | SD_VP_PITCH, swsp->pitch);
+    SeSetMix(1, swsp->v_no, swsp->param->efct);
+}
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", SeGetSndBufTop);
+static void SeSetMix(int core_id, int v_no, char mix_mode)
+{
+    u_int reg;
 
-INCLUDE_ASM("asm/nonmatchings/se/iopse", SeSetMasterVol);
+    if ((mix_mode & 1) != 0) {
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXL);
+        reg |= 1 << v_no;
+        sceSdSetSwitch(core_id | SD_S_VMIXL, reg);
+
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXR);
+        reg |= (1 << v_no);
+        sceSdSetSwitch(core_id | SD_S_VMIXR, reg);
+    } else {
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXL);
+        reg &= ~(1 << v_no);
+        sceSdSetSwitch(core_id | SD_S_VMIXL, reg);
+
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXR);
+        reg &= ~(1 << v_no);
+        sceSdSetSwitch(core_id | SD_S_VMIXR, reg);
+    }
+
+    if ((mix_mode & 2) != 0) {
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXEL);
+        reg |= 1 << v_no;
+        sceSdSetSwitch(core_id | SD_S_VMIXEL, reg);
+
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXER);
+        reg |= (1 << v_no);
+        sceSdSetSwitch(core_id | SD_S_VMIXER, reg);
+    } else {
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXEL);
+        reg &= ~(1 << v_no);
+        sceSdSetSwitch(core_id | SD_S_VMIXEL, reg);
+
+        reg = sceSdGetSwitch(core_id | SD_S_VMIXER);
+        reg &= ~(1 << v_no);
+        sceSdSetSwitch(core_id | SD_S_VMIXER, reg);
+    }
+}
+
+static int CidAndVnum(int voice_num, int voice_sift)
+{
+    if (voice_num >= 0 && voice_num < 24) {
+        return voice_num << voice_sift;
+    } else if (voice_num >= 24 && voice_num < 48) {
+        return ((voice_num - 24) << voice_sift) | 1;
+    }
+
+    return -1;
+}
+
+u_int SeGetSndBufTop(int pos)
+{
+    return snd_buf_top[pos];
+}
+
+void SeSetMasterVol(u_short mvol)
+{
+    sceSdSetParam(SD_P_MVOLL | SD_CORE_1, mvol & 0x3FFF);
+    sceSdSetParam(SD_P_MVOLR | SD_CORE_1, mvol & 0x3FFF);
+}

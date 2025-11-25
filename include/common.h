@@ -3258,6 +3258,8 @@ extern IOP_ADPCM iop_adpcm[2];
 extern u_int se_start_flg;
 extern u_int se_stop_flg;
 
+IOP_STAT* GetIopStatP();
+
 void IAdpcmInit(int dev_init);
 void IAdpcmCmd(IOP_COMMAND* icp);
 void IAdpcmMain();

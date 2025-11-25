@@ -47,8 +47,8 @@ void IAdpcmCmd(IOP_COMMAND* icp)
         break;
     case IC_ADPCM_MVOL:
         IAdpcmMvol(icp);
-        break;
     case IC_ADPCM_QUIT:
+        break;
     }
 }
 
@@ -201,19 +201,19 @@ void IAdpcmMain2()
         }
     } else {
         switch (now_cmd.cmd_type) {
-        case 1u:
+        case AC_PLAY:
             IAdpcmCmdPlay();
             break;
-        case 2u:
+        case AC_PRELOAD:
             IAdpcmCmdPreLoad();
             break;
-        case 3u:
+        case AC_STOP:
             IAdpcmCmdStop();
             break;
-        case 4u:
+        case AC_PAUSE:
             IAdpcmCmdPause();
             break;
-        case 5u:
+        case AC_RESTART:
             IAdpcmCmdRestart();
             break;
         }
